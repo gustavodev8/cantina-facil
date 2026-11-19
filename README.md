@@ -1,24 +1,29 @@
 # Cantina Fácil
 
-Protótipo web responsivo de pedidos para cantina escolar, baseado no fluxo de telas do projeto: cardápio, revisão do pedido, acompanhamento e painel da atendente.
+Protótipo interativo e responsivo de pedidos para cantina escolar, fiel às telas de referência: cardápio, revisão do pedido, acompanhamento e painel da atendente.
 
-## Rodar localmente
+## Executar localmente
 
 ```bash
 npm install
 npm run dev
 ```
 
-Abra o endereço mostrado pelo Vite. `npm run build` gera a versão estática em `dist/` para publicação no Vercel.
+Use o endereço local informado pelo Vite. `npm run build` gera a pasta `dist/` para o Vercel.
 
-## Como usar
+## Entrar e usar
 
-- A aba **Aluno** permite buscar itens, adicionar ao carrinho, ajustar quantidades, remover itens, confirmar o pedido e acompanhar o andamento.
-- A aba **Atendente** mostra a fila de pedidos em ordem recente, permite avançar entre **Em preparo**, **Pronto** e **Entregue** e controlar a disponibilidade do cardápio.
-- O botão **Gerenciar cardápio** abre o CRUD de produtos: cadastrar, editar, alternar disponibilidade e excluir.
-- Os dados ficam salvos em `localStorage` neste navegador. O protótipo não sincroniza dados entre navegadores ou dispositivos e não tem autenticação de produção nem pagamento real.
-- **Restaurar demonstração** volta ao cardápio e aos pedidos de exemplo.
+A página inicial tem login e cadastro. Para experimentar, escolha **Usar conta de demonstração** para preencher os dados e depois clique em **Entrar na cantina**:
+
+- Aluno: `aluno@cantina.local` / `Recreio123!`
+- Atendente: `atendente@cantina.local` / `Cantina123!`
+
+O perfil de aluno tem busca, cardápio, carrinho, ajuste de quantidades, remoção, confirmação, acompanhamento e histórico. O perfil de atendente tem fila, atualização sequencial de status (Recebido → Em preparo → Pronto → Entregue), controle de disponibilidade e CRUD de produtos. É possível cadastrar contas adicionais de aluno.
+
+As senhas são derivadas por PBKDF2 e os dados ficam no `localStorage` do navegador. As abas no mesmo navegador compartilham produtos e pedidos; cada aba pode manter seu próprio perfil para demonstrar aluno e atendente lado a lado. O projeto não tem autenticação de servidor ou banco remoto: dados não sincronizam entre dispositivos e não são adequados a informações reais. Não use senhas ou dados pessoais reais.
+
+**Restaurar demonstração** repõe os produtos e pedidos de exemplo após confirmação.
 
 ## Publicação
 
-Projeto estático pronto para importar no Vercel. Build command: `npm run build`; output directory: `dist`.
+Build command: `npm run build`. Output directory: `dist`.

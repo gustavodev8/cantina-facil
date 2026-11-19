@@ -12,11 +12,34 @@
   <link rel="stylesheet" href="/style.css" />
 </head>
 <body>
-  <div class="app-shell">
+  <section class="auth-screen" id="auth-screen">
+    <div class="auth-card">
+      <a class="auth-brand" href="#inicio"><span>🥪</span><span>Cantina <b>Fácil</b><small>ESCOLA EM MOVIMENTO</small></span></a>
+      <p class="eyebrow">SEU RECREIO COMEÇA AQUI</p>
+      <h1 id="auth-title">Que bom ter você<br/><em>por aqui.</em></h1>
+      <p class="auth-description" id="auth-description">Entre para pedir seu lanche ou acompanhar a cantina.</p>
+      <div class="auth-toggle"><button class="auth-toggle-button active" data-auth-mode="login">Entrar</button><button class="auth-toggle-button" data-auth-mode="register">Criar conta de aluno</button></div>
+      <form id="login-form" class="auth-form">
+        <label>E-mail<input type="email" name="email" autocomplete="username" required placeholder="voce@escola.com" /></label>
+        <label>Senha<span class="password-wrap"><input type="password" name="password" autocomplete="current-password" required minlength="6" placeholder="Sua senha"/><button class="show-password" type="button" aria-label="Mostrar senha">◉</button></span></label>
+        <button class="primary-button" type="submit">Entrar na cantina <span>→</span></button>
+      </form>
+      <form id="register-form" class="auth-form hidden">
+        <label>Seu nome<input type="text" name="name" autocomplete="name" required minlength="2" maxlength="60" placeholder="Como podemos te chamar?" /></label>
+        <label>E-mail<input type="email" name="email" autocomplete="email" required placeholder="voce@escola.com" /></label>
+        <label>Crie uma senha<span class="password-wrap"><input type="password" name="password" autocomplete="new-password" required minlength="6" placeholder="Mínimo de 6 caracteres"/><button class="show-password" type="button" aria-label="Mostrar senha">◉</button></span></label>
+        <button class="primary-button" type="submit">Criar minha conta <span>→</span></button>
+      </form>
+      <div class="demo-accounts"><div class="demo-title"><span>✦</span> Acesso para conhecer</div><div class="demo-account"><span>🎒 <b>Aluno</b></span><button data-fill-demo="student">Usar conta de demonstração</button></div><div class="demo-account"><span>👩‍🍳 <b>Atendente</b></span><button data-fill-demo="attendant">Usar conta de demonstração</button></div></div>
+      <p class="local-data-note">Contas e pedidos deste protótipo ficam salvos neste navegador.</p>
+    </div>
+  </section>
+
+  <div class="app-shell hidden" id="app-shell">
     <header class="topbar">
       <a class="brand" href="#inicio" aria-label="Cantina Fácil, início"><span class="brand-mark">🥪</span><span>Cantina <b>Fácil</b><small>ESCOLA EM MOVIMENTO</small></span></a>
       <div class="top-meta"><span class="open-dot"></span><span>Cantina aberta</span><span class="meta-divider"></span><span>Retirada no balcão</span></div>
-      <button class="demo-reset" id="reset-demo" title="Restaurar dados de demonstração">↻ <span>Restaurar demo</span></button>
+      <div class="account-actions"><span class="account-name" id="account-name"></span><button class="logout-button" id="logout-button">Sair</button></div>
     </header>
 
     <main>
@@ -26,31 +49,32 @@
       </section>
 
       <nav class="role-tabs" aria-label="Alternar perfil">
-        <button class="role-tab active" data-view="student"><span class="role-icon">🎒</span><span><b>Área do aluno</b><small>Ver cardápio e pedidos</small></span></button>
-        <button class="role-tab" data-view="attendant"><span class="role-icon">👩‍🍳</span><span><b>Painel da atendente</b><small>Organizar a fila</small><span class="queue-badge" id="queue-count">0</span></span></button>
+        <button class="role-tab active" data-view="student"><span class="role-icon">🎒</span><span><b>Aluno</b><small>Cardápio e pedidos</small></span></button>
+        <button class="role-tab" data-view="attendant"><span class="role-icon">👩‍🍳</span><span><b>Atendente</b><small>Fila da cantina</small><span class="queue-badge" id="queue-count">0</span></span></button>
       </nav>
 
       <section class="view active" id="student-view">
-        <div class="section-heading"><div><p class="eyebrow">PAUSA GOSTOSA</p><h2>O que vai querer hoje?</h2><p>Escolha seus favoritos. O pedido fica pronto rapidinho.</p></div><div class="search-wrap"><span>⌕</span><input type="search" id="search" placeholder="Buscar no cardápio" aria-label="Buscar no cardápio" /></div></div>
+        <div class="section-heading"><div><p class="eyebrow">PAUSA GOSTOSA</p><h2>O que você vai querer?</h2><p>Escolha e peça sem entrar na fila.</p></div><div class="search-wrap"><span>⌕</span><input type="search" id="search" placeholder="Buscar produto..." aria-label="Buscar no cardápio" /></div></div>
         <div class="category-row" id="categories"></div>
         <div class="product-grid" id="products"></div>
-        <div class="student-bottom"><span id="menu-count">0 opções fresquinhas</span><button class="cart-cta" id="open-cart">Ver meu pedido <span class="cart-count" id="cart-count">0</span><b id="cart-total">R$ 0,00</b><span>→</span></button></div>
+        <div class="student-bottom"><span id="menu-count">0 opções</span><button class="cart-cta" id="open-cart">Ver pedido <span class="cart-count" id="cart-count">0</span><b id="cart-total">R$ 0,00</b><span>→</span></button></div>
         <section class="tracking-card hidden" id="tracking-card"></section>
+        <section class="history-panel"><h3>Meus pedidos</h3><div id="student-orders"></div></section>
       </section>
 
       <section class="view" id="attendant-view">
-        <div class="section-heading attendant-heading"><div><p class="eyebrow">VISÃO DA EQUIPE</p><h2>Pedidos da cantina</h2><p>Uma fila organizada deixa o recreio melhor para todo mundo.</p></div><button class="outline-button" id="manage-menu">⚙ <span>Gerenciar cardápio</span></button></div>
+        <div class="section-heading attendant-heading"><div><p class="eyebrow">VISÃO DA EQUIPE</p><h2>Pedidos da cantina</h2><p>Fila de preparação e retirada.</p></div><button class="outline-button" id="manage-menu">⚙ <span>Gerenciar cardápio</span></button></div>
         <div class="attendant-stats" id="attendant-stats"></div>
-        <div class="inventory-panel"><div><p class="eyebrow">DISPONIBILIDADE</p><h3>Cardápio de hoje</h3><small>Toque em um item para pausar ou liberar.</small></div><div class="inventory-chips" id="inventory-chips"></div></div>
-        <div class="orders-head"><div><h3>Fila de pedidos</h3><span id="orders-subtitle">Atualizada agora</span></div><div class="filter-pills" id="order-filters"><button class="filter-pill active" data-filter="Todos">Todos</button><button class="filter-pill" data-filter="Recebido">Recebidos</button><button class="filter-pill" data-filter="Em preparo">Em preparo</button><button class="filter-pill" data-filter="Pronto">Prontos</button></div></div>
+        <div class="inventory-panel"><div><p class="eyebrow">ESTOQUE (TOQUE PARA ALTERNAR)</p><h3>Disponibilidade</h3><small>Toque em um item para marcar esgotado ou liberar.</small></div><div class="inventory-chips" id="inventory-chips"></div></div>
+        <div class="orders-head"><div><h3>Fila de pedidos</h3><span id="orders-subtitle">Confira o número e os itens antes de entregar.</span></div><div class="filter-pills" id="order-filters"><button class="filter-pill active" data-filter="Todos">Todos</button><button class="filter-pill" data-filter="Recebido">Recebidos</button><button class="filter-pill" data-filter="Em preparo">Em preparo</button><button class="filter-pill" data-filter="Pronto">Prontos</button></div></div>
         <div class="orders-list" id="orders-list"></div>
       </section>
     </main>
-    <footer><span>🥪 <b>Cantina Fácil</b></span><span>Um intervalo mais leve começa aqui.</span><span>Protótipo interativo</span></footer>
+    <footer><span>🥪 <b>Cantina Fácil</b></span><span>Um intervalo mais leve começa aqui.</span><span>Protótipo interativo</span><button class="demo-reset" id="reset-demo" title="Restaurar dados de demonstração">Restaurar demonstração</button></footer>
   </div>
   <div class="toast-region" id="toasts" aria-live="polite"></div>
-  <dialog id="cart-dialog" class="dialog"><div class="dialog-head"><div><p class="eyebrow">QUASE LÁ</p><h2>Seu pedido</h2><p>Confira tudo antes de confirmar.</p></div><button class="icon-button" data-close="cart-dialog" aria-label="Fechar">×</button></div><div class="cart-lines" id="cart-lines"></div><div class="cart-summary" id="cart-summary"></div><div class="dialog-actions"><button class="primary-button" id="confirm-order">Confirmar pedido <span>→</span></button><button class="text-button" id="back-menu">Voltar ao cardápio</button></div></dialog>
-  <dialog id="manage-dialog" class="dialog manage-dialog"><div class="dialog-head"><div><p class="eyebrow">PRODUTOS E ESTOQUE</p><h2>Gerenciar cardápio</h2><p>Cadastre e edite o que está à venda hoje.</p></div><button class="icon-button" data-close="manage-dialog" aria-label="Fechar">×</button></div><form id="product-form" class="product-form"><input type="hidden" name="id"/><label>Nome do item<input name="name" required maxlength="60" placeholder="Ex.: Pão de queijo"/></label><div class="form-row"><label>Preço (R$)<input name="price" type="number" required min="0.01" step="0.01" placeholder="0,00"/></label><label>Categoria<select name="category"><option>Lanches</option><option>Bebidas</option><option>Doces</option></select></label></div><label>Descrição curta<input name="description" maxlength="90" placeholder="O que deixa esse item especial?"/></label><div class="form-row"><label>Emoji<input name="emoji" maxlength="4" placeholder="🥪"/></label><label>Disponibilidade<select name="available"><option value="true">Disponível</option><option value="false">Esgotado</option></select></label></div><button class="primary-button" type="submit" id="save-product">Adicionar ao cardápio <span>→</span></button><button type="button" class="text-button hidden" id="cancel-edit">Cancelar edição</button></form><div class="manage-list" id="manage-list"></div></dialog>
+  <dialog id="cart-dialog" class="dialog"><div class="dialog-head"><div><p class="eyebrow">QUASE LÁ</p><h2>Seu pedido</h2><p>Confira e ajuste as quantidades antes de confirmar.</p></div><button class="icon-button" data-close="cart-dialog" aria-label="Fechar">×</button></div><div class="cart-lines" id="cart-lines"></div><div class="cart-summary" id="cart-summary"></div><div class="dialog-actions"><button class="primary-button" id="confirm-order">Confirmar pedido <span>→</span></button><button class="text-button" id="back-menu">Voltar ao cardápio</button></div></dialog>
+  <dialog id="manage-dialog" class="dialog manage-dialog"><div class="dialog-head"><div><p class="eyebrow">PRODUTOS E ESTOQUE</p><h2>Gerenciar cardápio</h2><p>Cadastre e edite os itens da cantina.</p></div><button class="icon-button" data-close="manage-dialog" aria-label="Fechar">×</button></div><form id="product-form" class="product-form"><input type="hidden" name="id"/><label>Nome do item<input name="name" required maxlength="60" placeholder="Ex.: Pão de queijo"/></label><div class="form-row"><label>Preço (R$)<input name="price" type="number" required min="0.01" step="0.01" placeholder="0,00"/></label><label>Categoria<select name="category"><option>Lanches</option><option>Bebidas</option><option>Doces</option></select></label></div><label>Descrição curta<input name="description" maxlength="90" placeholder="O que deixa esse item especial?"/></label><div class="form-row"><label>Emoji<input name="emoji" maxlength="4" placeholder="🥪"/></label><label>Disponibilidade<select name="available"><option value="true">Disponível</option><option value="false">Esgotado</option></select></label></div><button class="primary-button" type="submit" id="save-product">Adicionar ao cardápio <span>→</span></button><button type="button" class="text-button hidden" id="cancel-edit">Cancelar edição</button></form><div class="manage-list" id="manage-list"></div></dialog>
   <script type="module" src="/src.js"></script>
 </body>
 </html>
