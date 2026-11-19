@@ -57,16 +57,16 @@ function showAuth(mode = "login") {
   $("#login-form").classList.toggle("hidden", registering); $("#register-form").classList.toggle("hidden", !registering);
   $$("[data-auth-mode]").forEach(button => button.classList.toggle("active", button.dataset.authMode === mode));
   $("#auth-title").innerHTML = registering ? "Sua pausa gostosa<br/><em>começa aqui.</em>" : "Que bom ter você<br/><em>por aqui.</em>";
-  $("#auth-description").textContent = registering ? "Crie sua conta de aluno e peça sem entrar na fila." : "Entre para pedir seu lanche ou acompanhar a cantina.";
+  $("#auth-description").textContent = registering ? "Crie sua conta de aluno e peça sem entrar na fila." : "Entre para pedir seu lanche sem entrar na fila.";
 }
 function showApp() {
   const user = currentUser(); if (!user) return showAuth("login");
   $("#auth-screen").classList.add("hidden"); $("#app-shell").classList.remove("hidden");
   $("#account-name").textContent = user.name; $("#account-name").title = user.email;
-  $$(".role-tab").forEach(tab => { const active = tab.dataset.view === (user.role === "student" ? "student" : "attendant"); tab.classList.toggle("active", active); tab.classList.remove("hidden"); });
+  $("#account-role").textContent = user.role === "attendant" ? "Área da atendente" : "Área do aluno";
   $("#student-view").classList.toggle("active", user.role === "student"); $("#attendant-view").classList.toggle("active", user.role === "attendant");
 }
-function login(user) { userId = user.id; cart = state.carts[userId] || []; localStorage.setItem(SESSION_KEY, userId); showApp(); render(); toast(`Olá, ${user.name}!`); }
+function login(user) { userId = user.id; cart = state.carts[userId] || []; sessionStorage.setItem(SESSION_KEY, userId); showApp(); render(); toast(`Olá, ${user.name}!`); }
 function renderCategories() {
   const labels = ["Todos", "Lanches", "Bebidas", "Doces"];
   $("#categories").innerHTML = labels.map(label => `<button class="category-chip ${category === label ? "active" : ""}" data-category="${label}">${label}</button>`).join("");
@@ -174,17 +174,12 @@ $("#register-form").onsubmit = async event => {
   user.passwordHash = await passwordHash(password, user.salt); state.users.push(user); save(); login(user); form.reset(); toast("Conta de aluno criada.");
 };
 $$('[data-fill-demo]').forEach(button => button.onclick = () => {
-  const student = button.dataset.fillDemo === "student", form = $("#login-form");
-  showAuth("login"); form.elements.email.value = student ? DEMO_STUDENT.email : DEMO_ATTENDANT.email;
-  form.elements.password.value = student ? "Recreio123!" : "Cantina123!";
+  const form = $("#login-form");
+  showAuth("login"); form.elements.email.value = DEMO_STUDENT.email;
+  form.elements.password.value = "Recreio123!";
   form.elements.password.focus();
 });
 $("#logout-button").onclick = () => { state.carts[userId] = cart; localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); sessionStorage.removeItem(SESSION_KEY); userId = ""; cart = []; showAuth("login"); toast("Você saiu da conta."); };
-$$(".role-tab").forEach(button => button.onclick = () => {
-  const user = currentUser(), view = button.dataset.view;
-  if ((view === "attendant" && user.role !== "attendant") || (view === "student" && user.role !== "student")) return toast("Entre com a conta correspondente para acessar esta área.", "error");
-  $$(".role-tab").forEach(tab => tab.classList.toggle("active", tab === button)); $("#student-view").classList.toggle("active", view === "student"); $("#attendant-view").classList.toggle("active", view === "attendant"); render();
-});
 $("#search").addEventListener("input", event => { query = event.target.value; renderProducts(); });
 $("#open-cart").onclick = () => { renderCart(); $("#cart-dialog").showModal(); };
 $("#confirm-order").onclick = confirmOrder; $("#back-menu").onclick = () => $("#cart-dialog").close();

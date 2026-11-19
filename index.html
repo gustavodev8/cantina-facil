@@ -17,7 +17,7 @@
       <a class="auth-brand" href="#inicio"><span>🥪</span><span>Cantina <b>Fácil</b><small>ESCOLA EM MOVIMENTO</small></span></a>
       <p class="eyebrow">SEU RECREIO COMEÇA AQUI</p>
       <h1 id="auth-title">Que bom ter você<br/><em>por aqui.</em></h1>
-      <p class="auth-description" id="auth-description">Entre para pedir seu lanche ou acompanhar a cantina.</p>
+      <p class="auth-description" id="auth-description">Entre para pedir seu lanche sem entrar na fila.</p>
       <div class="auth-toggle"><button class="auth-toggle-button active" data-auth-mode="login">Entrar</button><button class="auth-toggle-button" data-auth-mode="register">Criar conta de aluno</button></div>
       <form id="login-form" class="auth-form">
         <label>E-mail<input type="email" name="email" autocomplete="username" required placeholder="voce@escola.com" /></label>
@@ -30,7 +30,8 @@
         <label>Crie uma senha<span class="password-wrap"><input type="password" name="password" autocomplete="new-password" required minlength="6" placeholder="Mínimo de 6 caracteres"/><button class="show-password" type="button" aria-label="Mostrar senha">◉</button></span></label>
         <button class="primary-button" type="submit">Criar minha conta <span>→</span></button>
       </form>
-      <div class="demo-accounts"><div class="demo-title"><span>✦</span> Acesso para conhecer</div><div class="demo-account"><span>🎒 <b>Aluno</b></span><button data-fill-demo="student">Usar conta de demonstração</button></div><div class="demo-account"><span>👩‍🍳 <b>Atendente</b></span><button data-fill-demo="attendant">Usar conta de demonstração</button></div></div>
+      <div class="demo-accounts"><div class="demo-title"><span>✦</span> Demonstração para apresentação</div><div class="demo-account"><span>🎒 <b>Conta de aluno</b><small>Cardápio, carrinho e acompanhamento</small></span><button data-fill-demo="student">Preencher acesso</button></div></div>
+      <p class="presentation-note">O painel da atendente é exibido somente após entrar com a credencial da equipe.</p>
       <p class="local-data-note">Contas e pedidos deste protótipo ficam salvos neste navegador.</p>
     </div>
   </section>
@@ -39,7 +40,7 @@
     <header class="topbar">
       <a class="brand" href="#inicio" aria-label="Cantina Fácil, início"><span class="brand-mark">🥪</span><span>Cantina <b>Fácil</b><small>ESCOLA EM MOVIMENTO</small></span></a>
       <div class="top-meta"><span class="open-dot"></span><span>Cantina aberta</span><span class="meta-divider"></span><span>Retirada no balcão</span></div>
-      <div class="account-actions"><span class="account-name" id="account-name"></span><button class="logout-button" id="logout-button">Sair</button></div>
+      <div class="account-actions"><div><span class="account-role" id="account-role"></span><span class="account-name" id="account-name"></span></div><button class="logout-button" id="logout-button">Sair</button></div>
     </header>
 
     <main>
@@ -47,11 +48,6 @@
         <div><p class="eyebrow">QUARTA-FEIRA · HORA DO RECREIO</p><h1>Seu intervalo,<br /><em>do seu jeito.</em></h1><p class="welcome-copy">Peça agora e retire no balcão quando estiver pronto.</p></div>
         <div class="hero-note"><span class="note-icon">☀</span><div><b>Feito na hora</b><small>Com carinho, todos os dias.</small></div></div>
       </section>
-
-      <nav class="role-tabs" aria-label="Alternar perfil">
-        <button class="role-tab active" data-view="student"><span class="role-icon">🎒</span><span><b>Aluno</b><small>Cardápio e pedidos</small></span></button>
-        <button class="role-tab" data-view="attendant"><span class="role-icon">👩‍🍳</span><span><b>Atendente</b><small>Fila da cantina</small><span class="queue-badge" id="queue-count">0</span></span></button>
-      </nav>
 
       <section class="view active" id="student-view">
         <div class="section-heading"><div><p class="eyebrow">PAUSA GOSTOSA</p><h2>O que você vai querer?</h2><p>Escolha e peça sem entrar na fila.</p></div><div class="search-wrap"><span>⌕</span><input type="search" id="search" placeholder="Buscar produto..." aria-label="Buscar no cardápio" /></div></div>
