@@ -182,9 +182,9 @@ $("#register-form").onsubmit = async event => {
   user.passwordHash = await passwordHash(password, user.salt); state.users.push(user); save(); login(user); form.reset(); toast("Conta de aluno criada.");
 };
 $$('[data-fill-demo]').forEach(button => button.onclick = () => {
-  const form = $("#login-form");
-  showAuth("login"); form.elements.email.value = DEMO_STUDENT.email;
-  form.elements.password.value = "Recreio123!";
+  const form = $("#login-form"), isAttendant = button.dataset.fillDemo === "attendant";
+  showAuth("login"); form.elements.email.value = isAttendant ? DEMO_ATTENDANT.email : DEMO_STUDENT.email;
+  form.elements.password.value = isAttendant ? "Cantina123!" : "Recreio123!";
   form.elements.password.focus();
 });
 $("#logout-button").onclick = () => { state.carts[userId] = cart; localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); sessionStorage.removeItem(SESSION_KEY); userId = ""; cart = []; showAuth("login"); toast("Você saiu da conta."); };
