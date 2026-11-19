@@ -70,14 +70,14 @@
       </section>
 
       <section class="view" id="attendant-view">
-        <div class="section-heading attendant-heading"><div><p class="eyebrow">VISÃO DA EQUIPE</p><h2>Pedidos da cantina</h2><p>Fila de preparação e retirada.</p></div><button class="outline-button" id="manage-menu">⚙ <span>Gerenciar cardápio</span></button></div>
+        <div class="section-heading attendant-heading"><div><p class="eyebrow">VISÃO DA EQUIPE</p><h2>Pedidos da cantina</h2><p>Fila de preparação e retirada.</p></div><div class="attendant-actions"><button class="outline-button" id="load-scenario">Carregar cenário</button><button class="outline-button" id="manage-menu">Gerenciar cardápio</button></div></div>
         <div class="attendant-stats" id="attendant-stats"></div>
         <div class="inventory-panel"><div><p class="eyebrow">ESTOQUE (TOQUE PARA ALTERNAR)</p><h3>Disponibilidade</h3><small>Toque em um item para marcar esgotado ou liberar.</small></div><div class="inventory-chips" id="inventory-chips"></div></div>
         <div class="orders-head"><div><h3>Fila de pedidos</h3><span id="orders-subtitle">Confira o número e os itens antes de entregar.</span></div><div class="filter-pills" id="order-filters"><button class="filter-pill active" data-filter="Todos">Todos</button><button class="filter-pill" data-filter="Recebido">Recebidos</button><button class="filter-pill" data-filter="Em preparo">Em preparo</button><button class="filter-pill" data-filter="Pronto">Prontos</button></div></div>
         <div class="orders-list" id="orders-list"></div>
       </section>
     </main>
-    <footer><span>🥪 <b>Cantina Fácil</b></span><span>Um intervalo mais leve começa aqui.</span><span>Protótipo interativo</span><button class="demo-reset" id="reset-demo" title="Restaurar dados de demonstração">Restaurar demonstração</button></footer>
+    <footer><span>🥪 <b>Cantina Fácil</b></span><span>Um intervalo mais leve começa aqui.</span><span>Protótipo interativo</span><button class="demo-reset" id="reset-demo" title="Limpar dados da demonstração">Limpar demonstração</button></footer>
   </div>
   <div class="toast-region" id="toasts" aria-live="polite"></div>
   <dialog id="cart-dialog" class="dialog"><div class="dialog-head"><div><p class="eyebrow">QUASE LÁ</p><h2>Seu pedido</h2><p>Confira e ajuste as quantidades antes de confirmar.</p></div><button class="icon-button" data-close="cart-dialog" aria-label="Fechar">×</button></div><div class="cart-lines" id="cart-lines"></div><div class="cart-summary" id="cart-summary"></div><div class="dialog-actions"><button class="primary-button" id="confirm-order">Confirmar pedido <span>→</span></button><button class="text-button" id="back-menu">Voltar ao cardápio</button></div></dialog>

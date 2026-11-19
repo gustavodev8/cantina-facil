@@ -1,4 +1,4 @@
-const STORAGE_KEY = "cantina-facil-v2";
+const STORAGE_KEY = "cantina-facil-v3";
 const SESSION_KEY = "cantina-facil-session";
 const DEMO_STUDENT = { id: "demo-student", name: "Aluno", email: "aluno@cantina.local", role: "student", salt: "cantina-facil-student", passwordHash: "" };
 const DEMO_ATTENDANT = { id: "demo-attendant", name: "Atendente", email: "atendente@cantina.local", role: "attendant", salt: "cantina-facil-attendant", passwordHash: "" };
@@ -6,16 +6,16 @@ const defaultProducts = [
   { id: "p1", name: "Suco de laranja", category: "Bebidas", price: 5, description: "Laranja espremida na hora", emoji: "🍊", available: true },
   { id: "p2", name: "Sanduíche natural", category: "Lanches", price: 8, description: "Frango, cenoura e pão integral", emoji: "🥪", available: true },
   { id: "p3", name: "Pão de queijo", category: "Lanches", price: 4, description: "Quentinho e feito hoje", emoji: "🧀", available: true },
-  { id: "p4", name: "Bolo de chocolate", category: "Doces", price: 6, description: "Fatia com cobertura cremosa", emoji: "🍰", available: false },
+  { id: "p4", name: "Bolo de chocolate", category: "Doces", price: 6, description: "Fatia com cobertura cremosa", emoji: "🍰", available: true },
 ];
-const demoOrders = [
+const presentationOrders = [
   { id: "022", userId: DEMO_STUDENT.id, studentName: "Aluno", items: [{ productId: "p1", name: "Suco de laranja", emoji: "🍊", price: 5, quantity: 1 }, { productId: "p3", name: "Pão de queijo", emoji: "🧀", price: 4, quantity: 1 }], status: "Entregue", createdAt: Date.now() - 33 * 60000 },
   { id: "023", userId: DEMO_STUDENT.id, studentName: "Aluno", items: [{ productId: "p2", name: "Sanduíche natural", emoji: "🥪", price: 8, quantity: 1 }], status: "Em preparo", createdAt: Date.now() - 9 * 60000 },
   { id: "024", userId: DEMO_STUDENT.id, studentName: "Aluno", items: [{ productId: "p1", name: "Suco de laranja", emoji: "🍊", price: 5, quantity: 1 }, { productId: "p2", name: "Sanduíche natural", emoji: "🥪", price: 8, quantity: 1 }], status: "Recebido", createdAt: Date.now() - 2 * 60000 },
 ];
 const readState = () => {
   try { const value = JSON.parse(localStorage.getItem(STORAGE_KEY) || "null"); if (value && Array.isArray(value.products) && Array.isArray(value.orders) && Array.isArray(value.users)) return value; } catch { /* empty or malformed storage */ }
-  return { products: structuredClone(defaultProducts), orders: structuredClone(demoOrders), users: [], carts: {}, nextOrder: 25 };
+  return { products: structuredClone(defaultProducts), orders: [], users: [], carts: {}, nextOrder: 25 };
 };
 let state = readState();
 let userId = sessionStorage.getItem(SESSION_KEY) || "";
@@ -45,7 +45,6 @@ async function initialize() {
   state.users = state.users.map(user => ({ ...user, role: user.role === "attendant" ? "attendant" : "student" }));
   if (!state.carts || typeof state.carts !== "object") state.carts = {};
   if (!Number.isInteger(state.nextOrder)) state.nextOrder = 25;
-  if (!state.orders.length) state.orders = structuredClone(demoOrders);
   state.orders = state.orders.map(order => ({ ...order, userId: order.userId || DEMO_STUDENT.id, studentName: order.studentName || (state.users.find(user => user.id === order.userId)?.name ?? "Aluno") }));
   localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
   if (userId && currentUser()) { cart = state.carts[userId] || []; showApp(); }
@@ -65,6 +64,7 @@ function showApp() {
   $("#auth-screen").classList.add("hidden"); $("#app-shell").classList.remove("hidden");
   $("#account-name").textContent = user.name; $("#account-name").title = user.email;
   $("#account-role").textContent = user.role === "attendant" ? "Área da atendente" : "Área do aluno";
+  $("#reset-demo").classList.toggle("hidden", user.role !== "attendant");
   $("#student-view").classList.toggle("active", user.role === "student"); $("#attendant-view").classList.toggle("active", user.role === "attendant");
   if (user.role === "student") setStudentScreen("menu");
 }
@@ -193,6 +193,11 @@ $$('[data-student-screen]').forEach(button => button.onclick = () => setStudentS
 $("#back-to-menu").onclick = () => setStudentScreen("menu");
 $("#open-cart").onclick = () => { renderCart(); $("#cart-dialog").showModal(); };
 $("#confirm-order").onclick = confirmOrder; $("#back-menu").onclick = () => $("#cart-dialog").close();
+$("#load-scenario").onclick = () => {
+  if (currentUser()?.role !== "attendant") return;
+  if (state.orders.length && !confirm("Carregar o cenário vai substituir os pedidos atuais. Continuar?")) return;
+  state.orders = structuredClone(presentationOrders); state.nextOrder = 25; save(); toast("Cenário de apresentação carregado.");
+};
 $("#manage-menu").onclick = () => { if (currentUser()?.role !== "attendant") return toast("Acesso exclusivo da atendente.", "error"); renderManageList(); $("#manage-dialog").showModal(); };
 $$("[data-close]").forEach(button => button.onclick = () => $("#" + button.dataset.close).close());
 $$(".dialog").forEach(dialog => dialog.addEventListener("click", event => { if (event.target === dialog) dialog.close(); }));
@@ -209,8 +214,8 @@ $("#product-form").onsubmit = event => {
 $("#order-filters").onclick = event => { const button = event.target.closest("[data-filter]"); if (!button) return; orderFilter = button.dataset.filter; $$(".filter-pill").forEach(pill => pill.classList.toggle("active", pill === button)); renderAttendant(); };
 $("#reset-demo").onclick = () => {
   if (currentUser()?.role !== "attendant") return;
-  if (!confirm("Restaurar cardápio e pedidos de exemplo? As alterações desta demonstração serão substituídas.")) return;
-  state.products = structuredClone(defaultProducts); state.orders = structuredClone(demoOrders); state.nextOrder = 25; state.carts = {}; cart = []; save(); renderManageList(); toast("Demonstração restaurada.");
+  if (!confirm("Limpar pedidos, carrinhos e alterações do cardápio?")) return;
+  state.products = structuredClone(defaultProducts); state.orders = []; state.nextOrder = 25; state.carts = {}; cart = []; save(); renderManageList(); toast("Demonstração limpa.");
 };
 initialize().catch(error => { console.error(error); toast(error.message || "Não foi possível iniciar a cantina.", "error"); });
 window.addEventListener("storage", event => {
