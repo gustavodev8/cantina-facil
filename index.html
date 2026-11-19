@@ -50,12 +50,23 @@
       </section>
 
       <section class="view active" id="student-view">
-        <div class="section-heading"><div><p class="eyebrow">PAUSA GOSTOSA</p><h2>O que você vai querer?</h2><p>Escolha e peça sem entrar na fila.</p></div><div class="search-wrap"><span>⌕</span><input type="search" id="search" placeholder="Buscar produto..." aria-label="Buscar no cardápio" /></div></div>
-        <div class="category-row" id="categories"></div>
-        <div class="product-grid" id="products"></div>
-        <div class="student-bottom"><span id="menu-count">0 opções</span><button class="cart-cta" id="open-cart">Ver pedido <span class="cart-count" id="cart-count">0</span><b id="cart-total">R$ 0,00</b><span>→</span></button></div>
-        <section class="tracking-card hidden" id="tracking-card"></section>
-        <section class="history-panel"><h3>Meus pedidos</h3><div id="student-orders"></div></section>
+        <nav class="student-nav" aria-label="Navegação do aluno">
+          <button class="student-nav-button active" data-student-screen="menu">Cardápio</button>
+          <button class="student-nav-button" data-student-screen="orders">Meus pedidos</button>
+        </nav>
+
+        <section class="student-screen active" id="student-menu-screen">
+          <div class="section-heading"><div><p class="eyebrow">PAUSA GOSTOSA</p><h2>O que você vai querer?</h2><p>Escolha e peça sem entrar na fila.</p></div><div class="search-wrap"><span>⌕</span><input type="search" id="search" placeholder="Buscar produto..." aria-label="Buscar no cardápio" /></div></div>
+          <div class="category-row" id="categories"></div>
+          <div class="product-grid" id="products"></div>
+          <div class="student-bottom"><span id="menu-count">0 opções</span><button class="cart-cta" id="open-cart">Ver pedido <span class="cart-count" id="cart-count">0</span><b id="cart-total">R$ 0,00</b></button></div>
+        </section>
+
+        <section class="student-screen" id="student-orders-screen">
+          <div class="section-heading orders-heading"><div><p class="eyebrow">SEUS LANCHES</p><h2>Meus pedidos</h2><p>Acompanhe o preparo e consulte seus pedidos anteriores.</p></div><button class="outline-button" id="back-to-menu">Ver cardápio</button></div>
+          <section class="tracking-card hidden" id="tracking-card"></section>
+          <section class="history-panel"><h3>Histórico de pedidos</h3><div id="student-orders"></div></section>
+        </section>
       </section>
 
       <section class="view" id="attendant-view">

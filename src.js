@@ -21,6 +21,7 @@ let state = readState();
 let userId = sessionStorage.getItem(SESSION_KEY) || "";
 let cart = [];
 let category = "Todos", query = "", orderFilter = "Todos";
+let studentScreen = "menu";
 const $ = selector => document.querySelector(selector);
 const $$ = selector => [...document.querySelectorAll(selector)];
 const money = amount => Number(amount).toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
@@ -65,8 +66,15 @@ function showApp() {
   $("#account-name").textContent = user.name; $("#account-name").title = user.email;
   $("#account-role").textContent = user.role === "attendant" ? "Área da atendente" : "Área do aluno";
   $("#student-view").classList.toggle("active", user.role === "student"); $("#attendant-view").classList.toggle("active", user.role === "attendant");
+  if (user.role === "student") setStudentScreen("menu");
 }
 function login(user) { userId = user.id; cart = state.carts[userId] || []; sessionStorage.setItem(SESSION_KEY, userId); showApp(); render(); toast(`Olá, ${user.name}!`); }
+function setStudentScreen(screen) {
+  studentScreen = screen;
+  $("#student-menu-screen")?.classList.toggle("active", screen === "menu");
+  $("#student-orders-screen")?.classList.toggle("active", screen === "orders");
+  $$('[data-student-screen]').forEach(button => button.classList.toggle("active", button.dataset.studentScreen === screen));
+}
 function renderCategories() {
   const labels = ["Todos", "Lanches", "Bebidas", "Doces"];
   $("#categories").innerHTML = labels.map(label => `<button class="category-chip ${category === label ? "active" : ""}" data-category="${label}">${label}</button>`).join("");
@@ -105,7 +113,7 @@ function confirmOrder() {
   const idNum = Math.max(state.nextOrder || 25, ...state.orders.map(order => Number(order.id) + 1 || 25));
   state.nextOrder = idNum + 1; const id = String(idNum).padStart(3, "0");
   state.orders.push({ id, userId, studentName: currentUser().name, items: structuredClone(cart), status: "Recebido", createdAt: Date.now() });
-  cart = []; state.carts[userId] = []; save(); $("#cart-dialog").close(); toast(`Pedido #${id} enviado para a cantina!`); $("#tracking-card").scrollIntoView({ behavior: "smooth", block: "center" });
+  cart = []; state.carts[userId] = []; save(); $("#cart-dialog").close(); setStudentScreen("orders"); toast(`Pedido #${id} enviado para a cantina!`); $("#tracking-card").scrollIntoView({ behavior: "smooth", block: "center" });
 }
 const statusOrder = ["Recebido", "Em preparo", "Pronto", "Entregue"];
 function renderTracking() {
@@ -181,6 +189,8 @@ $$('[data-fill-demo]').forEach(button => button.onclick = () => {
 });
 $("#logout-button").onclick = () => { state.carts[userId] = cart; localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); sessionStorage.removeItem(SESSION_KEY); userId = ""; cart = []; showAuth("login"); toast("Você saiu da conta."); };
 $("#search").addEventListener("input", event => { query = event.target.value; renderProducts(); });
+$$('[data-student-screen]').forEach(button => button.onclick = () => setStudentScreen(button.dataset.studentScreen));
+$("#back-to-menu").onclick = () => setStudentScreen("menu");
 $("#open-cart").onclick = () => { renderCart(); $("#cart-dialog").showModal(); };
 $("#confirm-order").onclick = confirmOrder; $("#back-menu").onclick = () => $("#cart-dialog").close();
 $("#manage-menu").onclick = () => { if (currentUser()?.role !== "attendant") return toast("Acesso exclusivo da atendente.", "error"); renderManageList(); $("#manage-dialog").showModal(); };
